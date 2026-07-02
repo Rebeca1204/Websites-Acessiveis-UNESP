@@ -25,13 +25,34 @@
 | Métrica | Valor |
 |---|---|
 | Macro F1 (DistilBERT) | **0,9977** |
-| Acurácia na validação | **100%** (440 amostras) |
+| Acurácia — validação estratificada | **100%** (440 amostras) |
+| Acurácia — batch completo | **95,2%** (8.380 / 8.800 amostras) |
 | Testes automatizados | **97** (100% passando) |
 | Páginas analisadas | 26 |
-| Erros detectados | 520 |
+| Erros detectados | 521 |
+| Classificações ML no pipeline real | 521 |
 | Score médio de acessibilidade | 59/100 |
-| Categoria dominante | wcag-1.4.3 — Contraste (345 erros, 66%) |
+| Categoria dominante | wcag-1.4.3 — Contraste (346 erros, 66%) |
 | Dataset gerado | 8.800 exemplos balanceados |
+| Imagens com alt sugerido | 14 de 15 processadas |
+ 
+### Acurácia por categoria (batch — 8.800 amostras)
+ 
+| Categoria | Acertos | Acurácia |
+|---|---|---|
+| wcag-1.1.1 | 800/800 | 100% |
+| wcag-1.3.1 | 800/800 | 100% |
+| wcag-1.4.3 | 789/800 | 99% |
+| wcag-1.4.4 | 800/800 | 100% |
+| wcag-2.1.1 | 799/800 | 100% |
+| wcag-2.4.1 | 794/800 | 99% |
+| wcag-2.4.2 | 800/800 | 100% |
+| wcag-2.4.4 | 464/800 | 58% ⚠️ |
+| wcag-3.1.1 | 775/800 | 97% |
+| wcag-4.1.1 | 786/800 | 98% |
+| wcag-4.1.2 | 773/800 | 97% |
+ 
+> **Nota sobre wcag-2.4.4 (58%):** a principal confusão ocorre com wcag-1.1.1 (336 casos). Links compostos apenas por ícones sem texto — como `<a><i class="fa fa-bars"></i></a>` — compartilham estrutura sintática com imagens sem `alt`, o que leva o modelo a classificá-los como problema de texto alternativo. As outras 10 categorias atingem 97–100% individualmente.
  
 ![Matriz de confusão normalizada — F1 = 0,9977](screenshots/matriz_confusao_normalizada.png)
 
