@@ -175,7 +175,7 @@ def main():
     if args.html:
         html = args.html
         categoria, confianca, top3 = classificar(html, tokenizer, model, le)
-        print(f"\HTML: {html[:100]}...")
+        print(f"\\HTML: {html[:100]}...")
         print(f"Categoria predita : {categoria}")
         print(f"Confiança : {confianca:.1%}")
         print(f"Top 3:")
