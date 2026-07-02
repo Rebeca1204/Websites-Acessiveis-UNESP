@@ -13,3 +13,4 @@ pytesseract>=0.3.10
 sacremoses>=0.1.0
 pytest==8.2.2
 numpy==1.26.4
+sentencePiece
