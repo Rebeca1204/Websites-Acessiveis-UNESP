@@ -33,12 +33,7 @@ jobs:
       - name: Instalar dependências Python (leve)
         run: |
           pip install --upgrade pip
-          pip install \
-            scikit-learn \
-            Pillow \
-            requests \
-            pytesseract \
-            sacremoses
+          pip install -r requirements.txt
       - name: Instalar dependências Node
         run: npm install --ignore-scripts
       - name: Rodar testar.py
