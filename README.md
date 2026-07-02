@@ -3,7 +3,7 @@
 > Plataforma híbrida de análise automática de acessibilidade web aplicada ao portal institucional da UNESP.
 > Integra crawler BFS, axe-core (desktop + mobile), DistilBERT, OCR (pytesseract) + BLIP + Helsinki-NLP e relatório HTML interativo.
 
-[![CI](https://github.com/rebecalascasas/wcag-unesp/actions/workflows/ci.yml/badge.svg)](https://github.com/rebecalascasas/wcag-unesp/actions/workflows/ci.yml)
+[![CI](https://github.com/Rebeca1204/Websites-Acessiveis-UNESP/actions/workflows/ci.yml/badge.svg)](https://github.com/Rebeca1204/Websites-Acessiveis-UNESP/actions/workflows/ci.yml)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
 [![Node 20](https://img.shields.io/badge/node-20-green)](https://nodejs.org/)
 [![Testes](https://img.shields.io/badge/testes-97%20passando-brightgreen)](testar.py)
