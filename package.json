@@ -1,0 +1,21 @@
+{
+  "name": "wcag-dataset",
+  "version": "1.0.0",
+  "description": "Pipeline de análise de acessibilidade WCAG para o site da UNESP",
+  "main": "index.js",
+  "scripts": {
+    "1-crawler": "node crawler.js",
+    "2-analisar": "node analisar.js",
+    "3-salvar": "node salvar.js",
+    "3b-sinteticos": "python3 injetar-sinteticos.py",
+    "4-dataset": "python3 gerar-dataset-completo.py",
+    "5-treinar": "python3 treinar.py",
+    "6-pipeline": "node pipeline.js --relatorios",
+    "tudo": "node crawler.js && node analisar.js && node salvar.js && python3 injetar-sinteticos.py && python3 gerar-dataset-completo.py"
+  },
+  "dependencies": {
+    "axe-core": "^4.9.0",
+    "sql.js": "^1.10.3",
+    "puppeteer": "^22.0.0"
+  }
+}

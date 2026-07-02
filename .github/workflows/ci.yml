@@ -1,0 +1,79 @@
+# CI do projeto WCAG Dataset — executa a cada push e pull request
+
+# testes   — roda os 97 testes Python (testar.py) sem baixar modelos pesados
+# lint-js  — verifica sintaxe dos arquivos Node.js com `node --check`
+
+name: CI
+
+on:
+  push:
+    branches: ["**"]       
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  testes:
+    name: Testes Python (testar.py)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Instalar dependências Python (leve)
+        run: |
+          pip install --upgrade pip
+          pip install \
+            scikit-learn \
+            Pillow \
+            requests \
+            pytesseract \
+            sacremoses
+      - name: Instalar dependências Node
+        run: npm install --ignore-scripts
+      - name: Rodar testar.py
+        run: python3 -m pytest testar.py -v --tb=short
+      - name: Sumário de resultados
+        if: always()
+        run: |
+          echo "## Resultados dos Testes" >> $GITHUB_STEP_SUMMARY
+          python3 -m pytest testar.py --tb=no -q 2>&1 | tail -5 >> $GITHUB_STEP_SUMMARY
+  lint-js:
+    name: Lint JS (node --check)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verificar sintaxe dos arquivos JS
+        run: |
+          echo "Verificando sintaxe de arquivos .js..."
+          FALHAS=0
+          for f in crawler.js analisar.js salvar.js pipeline.js db.js; do
+            if [ -f "$f" ]; then
+              node --check "$f" && echo "  $f" || { echo "$f FALHOU"; FALHAS=$((FALHAS+1)); }
+            else
+              echo " $f não encontrado"
+            fi
+          done
+          if [ $FALHAS -gt 0 ]; then
+            echo "$FALHAS arquivo(s) com erro de sintaxe"
+            exit 1
+          fi
+          echo "Todos os arquivos JS passaram na verificação de sintaxe"

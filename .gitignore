@@ -1,0 +1,120 @@
+# ══════════════════════════════════════════════════════════════════
+# .gitignore — WCAG Dataset / Pipeline UNESP
+# ══════════════════════════════════════════════════════════════════
+
+# ─── Dados gerados pelo pipeline ─────────────────────────────────
+# HTMLs coletados pelo crawler (podem ser 100+ MB no total)
+htmls/
+htmls-mobile/
+
+# Relatórios axe-core por página
+relatorios/
+
+# Banco SQLite (regenerado por salvar.js)
+wcag.db
+
+# Dataset gerado (regenerado por gerar-dataset-completo.py)
+dataset-balanced.jsonl
+
+# Relatório final do pipeline
+relatorio-final.json
+relatorio-final.html
+relatorio-final-visao.json
+relatorio-final-visao.html
+
+# Arquivos temporários do pipeline (visao.py ↔ pipeline.js)
+.tmp-visao-input.json
+.tmp-visao-output.json
+
+# Log do crawler
+urls-visitadas.json
+urls-visitadas-mobile.json
+
+# ─── Modelo treinado ──────────────────────────────────────────────
+# O modelo DistilBERT treinado pode chegar a ~300 MB.
+# Para versionar o modelo, use Git LFS ou hospede no Hugging Face Hub.
+modelo-wcag/
+
+# Resultados de avaliação (matrizes, gráficos, métricas)
+resultados/
+
+# ─── Cache de visão computacional ────────────────────────────────
+# Cache local do BLIP/OCR — específico de cada máquina
+.blip-cache/
+
+# ─── Python ──────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+ENV/
+
+# Distribuição / build
+dist/
+build/
+*.egg-info/
+*.egg
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy / pyright
+.mypy_cache/
+.pyright/
+pyrightconfig.json
+
+# ─── Node.js ─────────────────────────────────────────────────────
+node_modules/
+
+# Logs do npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+
+# ─── Sistema operacional ─────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# ─── IDEs e editores ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# ─── Segurança ───────────────────────────────────────────────────
+# Chaves de API e variáveis de ambiente — nunca versionar
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# ─── Imagens e artefatos pesados opcionais ───────────────────────
+# Descomente se quiser ignorar screenshots ou exports de imagem
+# *.png
+# *.jpg
+# *.gif
