@@ -1,7 +1,7 @@
 # WCAG Dataset — Pipeline Completo
 
-> Plataforma híbrida de análise automática de acessibilidade web aplicada ao portal institucional da UNESP.
-> Integra crawler BFS, axe-core (desktop + mobile), DistilBERT, OCR (pytesseract) + BLIP + Helsinki-NLP e relatório HTML interativo.
+> Ferramenta que detecta, classifica e sugere correções para violações de acessibilidade (WCAG) em sites, combinando análise estática, aprendizado de máquina e visão computacional.
+> Desenvolvida como projeto de Iniciação Científica na Unesp, com bolsa FAPESP, e aplicada ao portal institucional: 26 páginas analisadas · 520 erros mapeados · F1 = 0,9977
 
 [![CI](https://github.com/Rebeca1204/Websites-Acessiveis-UNESP/actions/workflows/ci.yml/badge.svg)](https://github.com/Rebeca1204/Websites-Acessiveis-UNESP/actions/workflows/ci.yml)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
@@ -9,21 +9,80 @@
 [![Testes](https://img.shields.io/badge/testes-97%20passando-brightgreen)](testar.py)
 
 ---
+ 
+## O que o pipeline faz
+ 
+- 🔍 **Crawl** das páginas com BFS (profundidade configurável)
+- ♿ **Análise axe-core** em desktop e mobile por página
+- 🤖 **Classificação DistilBERT** fine-tunado em 8.800 exemplos (11 categorias WCAG)
+- 👁️ **Visão computacional** — OCR + BLIP para descrever imagens sem `alt`
+- 📊 **Relatório HTML interativo** com score, gráficos e sugestões de correção
+  
+---
 
-## Sumário
+## Resultados obtidos
 
+| Métrica | Valor |
+|---|---|
+| Macro F1 (DistilBERT) | **0,9977** |
+| Acurácia na validação | **100%** (440 amostras) |
+| Testes automatizados | **97** (100% passando) |
+| Páginas analisadas | 26 |
+| Erros detectados | 520 |
+| Score médio de acessibilidade | 59/100 |
+| Categoria dominante | wcag-1.4.3 — Contraste (345 erros, 66%) |
+| Dataset gerado | 8.800 exemplos balanceados |
+ 
+![Matriz de confusão normalizada — F1 = 0,9977](resultados/matriz_confusao_normalizada.png)
+
+---
+
+## Arquitetura do pipeline
+ 
+```
+Passo 1  →  Crawler BFS (profundidade máx. 3)
+Passo 2  →  Análise axe-core (desktop + mobile por página)
+Passo 3  →  Persistência SQLite + injeção de dados sintéticos
+Passo 4  →  Geração do dataset (8.800 exemplos, 11 categorias)
+Passo 5  →  Fine-tuning DistilBERT (weighted loss, grad. acumulado)
+Passo 6  →  Inferência / teste do modelo (argumento / interativo / batch)
+Passo 7  →  Pipeline integrado → relatório HTML com score e gráficos
+Passo 8  →  97 testes automatizados de regressão (5 suites)
+```
+ 
+---
+ 
+## Categorias WCAG cobertas (11)
+ 
+| Categoria | Critério WCAG | Regras axe mapeadas | Exemplos |
+|---|---|---|---|
+| wcag-1.1.1 | Texto alternativo em imagens | image-alt, input-image-alt, role-img-alt | 800 |
+| wcag-1.3.1 | Informação e relações semânticas | td-headers-attr, th-has-data-cells, list, listitem | 800 |
+| wcag-1.4.3 | Contraste mínimo de cores | color-contrast | 800 |
+| wcag-1.4.4 | Redimensionamento de texto | meta-viewport | 800 |
+| wcag-2.1.1 | Acessibilidade por teclado | keyboard, tabindex | 800 |
+| wcag-2.4.1 | Skip links (bypass) | bypass | 800 |
+| wcag-2.4.2 | Título da página | document-title | 800 |
+| wcag-2.4.4 | Finalidade do link | link-name | 800 |
+| wcag-3.1.1 | Idioma da página | html-has-lang, html-lang-valid | 800 |
+| wcag-4.1.1 | HTML válido (IDs duplicados etc.) | duplicate-id, duplicate-id-active, duplicate-id-aria | 800 |
+| wcag-4.1.2 | Nome, função e valor (ARIA) | button-name, label, select-name, textarea-name, aria-* | 800 |
+| **Total** | | **26 regras** | **8.800** |
+ 
+---
+
+ ## Sumário
+ 
 - [Instalação](#instalação)
 - [Execução — passo a passo](#execução--passo-a-passo)
 - [Scripts npm](#scripts-npm-disponíveis)
 - [Estrutura do projeto](#estrutura-do-projeto)
-- [Categorias WCAG cobertas](#categorias-wcag-cobertas-11)
 - [Formato do dataset](#formato-do-dataset)
 - [Saída do pipeline](#pipeline-integrado--saída)
-- [Resultados obtidos](#resultados-obtidos)
 - [Integração contínua](#integração-contínua-ci)
 - [Checklist](#checklist-de-conclusão)
 - [Limitações e trabalhos futuros](#limitações-e-trabalhos-futuros)
-
+  
 ---
 
 ## Instalação
@@ -260,25 +319,6 @@ wcag-dataset/
 
 ---
 
-## Categorias WCAG cobertas (11)
-
-| Categoria | Critério WCAG | Regras axe mapeadas | Exemplos |
-|---|---|---|---|
-| wcag-1.1.1 | Texto alternativo em imagens | `image-alt`, `input-image-alt`, `role-img-alt` | 800 |
-| wcag-1.3.1 | Informação e relações semânticas | `td-headers-attr`, `th-has-data-cells`, `list`, `listitem` | 800 |
-| wcag-1.4.3 | Contraste mínimo de cores | `color-contrast` | 800 |
-| wcag-1.4.4 | Redimensionamento de texto | `meta-viewport` | 800 |
-| wcag-2.1.1 | Acessibilidade por teclado | `keyboard`, `tabindex` | 800 |
-| wcag-2.4.1 | Skip links (bypass) | `bypass` | 800 |
-| wcag-2.4.2 | Título da página | `document-title` | 800 |
-| wcag-2.4.4 | Finalidade do link | `link-name` | 800 |
-| wcag-3.1.1 | Idioma da página | `html-has-lang`, `html-lang-valid` | 800 |
-| wcag-4.1.1 | HTML válido (IDs duplicados etc.) | `duplicate-id`, `duplicate-id-active`, `duplicate-id-aria` | 800 |
-| wcag-4.1.2 | Nome, função e valor (ARIA) | `button-name`, `label`, `select-name`, `textarea-name`, `aria-*` | 800 |
-| **Total** | | **26 regras** | **8.800** |
-
----
-
 ## Formato do dataset
 
 ```json
@@ -306,24 +346,6 @@ O `relatorio-final.html` contém para cada página:
 - **Paginação dinâmica** — erros além de 50 revelados via "Mostrar mais N erro(s)"
 - **Gráfico de barras** — erros por categoria WCAG (Chart.js)
 - **Gráfico de rosca** — distribuição por nível de impacto com percentuais
-
----
-
-## Resultados obtidos
-
-| Métrica | Valor |
-|---|---|
-| Páginas analisadas | 26 |
-| Total de erros detectados | 520 |
-| Score médio de acessibilidade | 59/100 |
-| Categoria dominante | `wcag-1.4.3` — Contraste (345 erros, 66% do total) |
-| Macro F1 (DistilBERT) | 0,9977 |
-| Acurácia no conjunto de validação | 100% (440 amostras estratificadas) |
-| Imagens com alt sugerido | 14 de 15 processadas |
-| Testes automatizados | 97 (100% passando) |
-| Dataset | 8.800 exemplos (800/categoria) |
-| Modelo base | DistilBERT-base-uncased (66M parâmetros) |
-| Hardware de treino | CPU, ~4 GB RAM |
 
 ---
 
