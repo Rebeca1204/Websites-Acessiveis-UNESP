@@ -33,8 +33,50 @@
 | Categoria dominante | wcag-1.4.3 — Contraste (345 erros, 66%) |
 | Dataset gerado | 8.800 exemplos balanceados |
  
-![Matriz de confusão normalizada — F1 = 0,9977](resultados/matriz_confusao_normalizada.png)
+![Matriz de confusão normalizada — F1 = 0,9977](screenshots/matriz_confusao_normalizada.png)
 
+---
+
+## Capturas do relatório
+ 
+### Visão geral — KPIs, gráficos e lista de páginas
+ 
+![Relatório de Acessibilidade WCAG — visão geral com KPIs, gráficos de barras e rosca, tabela de categorias e lista de páginas com score colorido](docs/screenshots/01_visao_geral.png)
+ 
+> Score médio **59/100** · 521 erros · 26 páginas · 14 imagens descritas (OCR/BLIP)
+ 
+---
+ 
+### Tabela de erros expandida — HTML original, ML, visão e correção
+ 
+![Tabela de erros com colunas: impacto, categoria, critério, HTML original, classificação ML, visão computacional e correção sugerida](docs/screenshots/02_detalhe_erros.png)
+ 
+> Cada erro exibe o trecho HTML problemático, a categoria predita pelo DistilBERT com % de confiança, a descrição gerada por OCR ou BLIP e a correção automática sugerida.
+ 
+---
+ 
+### Filtro por categoria — wcag-1.4.3 (Contraste)
+ 
+![Barra de filtro com botão wcag-1.4.3 selecionado, mostrando apenas as páginas com erros de contraste](docs/screenshots/03_filtro_contraste.png)
+ 
+> Filtro em JavaScript puro: ao clicar em uma categoria, apenas as páginas e linhas com aquela violação ficam visíveis. Páginas sem erros da categoria são ocultadas automaticamente.
+ 
+---
+ 
+### Paginação dinâmica — "Mostrar mais 54 erro(s)"
+ 
+![Página www_unesp_br_ouvidoria_ses_carta_de_servicos com 104 erros, mostrando botão "Mostrar mais 54 erro(s)" após os primeiros 50 erros renderizados](docs/screenshots/04_paginacao.png)
+ 
+> Páginas com mais de 50 erros exibem apenas os primeiros 50 por padrão. O botão revela o restante sem recarregar; o filtro de categoria ativo é reaplicado automaticamente.
+ 
+---
+ 
+### Visão computacional — badges OCR e BLIP com descrições geradas
+ 
+![Filtro wcag-1.1.1 ativo mostrando imagens sem alt com badges BLIP e OCR e descrições geradas em pt-BR](docs/screenshots/05_blip_ocr.png)
+ 
+> Para cada imagem sem atributo `alt`, o pipeline tenta OCR primeiro (logos e banners com texto legível) e usa o modelo BLIP como fallback para imagens fotográficas. O badge indica a fonte: 🔤 OCR · 🤖 BLIP · ♻️ cache.
+ 
 ---
 
 ## Arquitetura do pipeline
